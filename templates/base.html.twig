@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}GeoGuesser{% endblock %}</title>
+    {% block stylesheets %} {% endblock %}
+</head>
+<body>
+    {% block body %}{% endblock %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK8jliI4T25vREkqsPkWmLLoMhJTYONMs&callback=initMap" async defer></script>
+    {% block javascripts %} {% endblock %}
+</body>
+</html>

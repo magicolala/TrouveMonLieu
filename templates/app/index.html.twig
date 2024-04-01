@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #pano {
+        width: 100%;
+        height: 400px;
+    }
+
+    #map {
+        width: 100%;
+        height: 200px;
+    }
+
+    #guessForm {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <h1>GeoGuesser</h1>
+
+    <div id="pano"></div>
+    <div id="map"></div>
+
+    <form id="guessForm" action="{{ path('game_check_answer') }}" method="post">
+        <input type="hidden" name="cityId" value="{{ city.id }}">
+        <input type="hidden" name="latitude" id="guessLatitude">
+        <input type="hidden" name="longitude" id="guessLongitude">
+        <button type="submit">Soumettre</button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var marker;
+
+    function initMap() {
+        var cityLatitude = {{ city.latitude }};
+        var cityLongitude = {{ city.longitude }};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 27.26811, lng: 130.01776 },
+            zoom: 2
+        });
+
+        var panorama = new google.maps.StreetViewPanorama(
+            document.getElementById('pano'), {
+                position: { lat: cityLatitude, lng: cityLongitude },
+                pov: {
+                    heading: 34,
+                    pitch: 10
+                }
+            });
+
+        map.addListener('click', function(event) {
+            var guessedLatitude = event.latLng.lat();
+            var guessedLongitude = event.latLng.lng();
+
+            document.getElementById('guessLatitude').value = guessedLatitude;
+            document.getElementById('guessLongitude').value = guessedLongitude;
+
+            // Supprimer le marqueur précédent s'il existe
+            if (marker) {
+                marker.setMap(null);
+            }
+
+            // Ajouter un nouveau marqueur à l'emplacement cliqué
+            marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map
+            });
+        });
+    }
+</script>
+{% endblock %}
