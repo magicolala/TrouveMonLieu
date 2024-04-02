@@ -1,7 +1,27 @@
-# Nom du projet
+# Trouve Mon Lieu
+Une brève description de votre projet et de son objectif.Trouve Mon Lieu est une application web interactive qui permet aux utilisateurs de découvrir de nouveaux endroits de manière aléatoire et amusante. L'application utilise une base de données de villes pour suggérer des destinations intéressantes aux utilisateurs, en leur fournissant des informations clés telles que le nom de la ville, sa latitude et sa longitude.
 
-Une brève description de votre projet et de son objectif.
+Fonctionnalités principales
+Génération aléatoire de villes : Les utilisateurs peuvent cliquer sur un bouton pour obtenir une suggestion de ville aléatoire.
+Informations détaillées sur les villes : Pour chaque ville suggérée, l'application affiche le nom, la latitude et la longitude.
+Interface utilisateur conviviale : L'application utilise le framework CSS Tabler pour offrir une expérience utilisateur agréable et réactive.
+Administration des villes : Les administrateurs peuvent ajouter, modifier et supprimer des villes dans la base de données via une interface d'administration dédiée.
+Technologies utilisées
+PHP 8.1
+Symfony 6.2
+Doctrine ORM
+Twig
+Tabler CSS Framework
+MySQL
+Public cible
+Trouve Mon Lieu s'adresse à tous ceux qui cherchent à découvrir de nouveaux endroits, que ce soit pour planifier leurs prochaines vacances, trouver de l'inspiration pour un projet ou simplement satisfaire leur curiosité. L'application est particulièrement adaptée aux voyageurs, aux blogueurs, aux photographes et à tous ceux qui apprécient l'exploration et la découverte de nouvelles destinations.
 
+Objectifs futurs
+Intégration de données supplémentaires : Ajout d'informations complémentaires sur les villes, telles que des photos, des descriptions, des liens vers des ressources externes, etc.
+Filtres de recherche avancés : Permettre aux utilisateurs de filtrer les suggestions de villes en fonction de critères spécifiques, tels que le pays, le continent, le climat, etc.
+Partage sur les réseaux sociaux : Permettre aux utilisateurs de partager facilement leurs découvertes sur les réseaux sociaux.
+Version mobile : Développer une application mobile pour iOS et Android afin d'offrir une expérience optimisée aux utilisateurs mobiles.
+Trouve Mon Lieu est un projet open-source qui vise à inspirer et à encourager l'exploration du monde qui nous entoure. Nous sommes ouverts aux contributions de la communauté et nous nous réjouissons de voir l'application évoluer et s'améliorer au fil du temps.
 ## Prérequis
 
 - PHP 8.1 ou supérieur
