@@ -79,6 +79,9 @@
 		<img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
 
 		<a href="{{ path('app_home') }}" class="btn btn-primary">Rejouer</a>
+
+		<a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success">Valider</a>
+
 	</div>
 {% endblock %}
 

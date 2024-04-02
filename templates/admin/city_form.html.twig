@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css">
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		<h2>{{ app.request.attributes.get('_route') == 'admin_city_new' ? 'Ajouter une ville' : 'Modifier une ville' }}
+		</h2>
+		<div class="card">
+			<div class="card-body">
+				{{ form_start(form) }}
+				<div class="mb-3">
+					{{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+					{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.latitude, 'Latitude', {'label_attr': {'class': 'form-label'}}) }}
+					{{ form_widget(form.latitude, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.longitude, 'Longitude', {'label_attr': {'class': 'form-label'}}) }}
+					{{ form_widget(form.longitude, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary">
+						{{ app.request.attributes.get('_route') == 'admin_city_new' ? 'Ajouter' : 'Modifier' }}
+					</button>
+				</div>
+				{{ form_end(form) }}
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://unpkg.com/@tabler/core@latest/dist/js/tabler.min.js"></script>
+{% endblock %}
+

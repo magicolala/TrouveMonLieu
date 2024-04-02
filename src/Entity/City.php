@@ -22,6 +22,9 @@ class City
     #[ORM\Column]
     private ?float $longitude = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $validated = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +62,18 @@ class City
     public function setLongitude(float $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function isValidated(): bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(bool $validated): self
+    {
+        $this->validated = $validated;
 
         return $this;
     }

@@ -42,9 +42,9 @@ class AppController extends AbstractController
         // Calculer la distance entre les coordonnées devinées et les coordonnées réelles
         $distance = $this->calculateDistance($guessedLatitude, $guessedLongitude, $city->getLatitude(), $city->getLongitude());
 
-        // Calculer le score en fonction de la distance
-        $maxDistance = 20000; // Distance maximale en kilomètres pour un score de 0
-        $score = round(max(0, 5000 - ($distance / $maxDistance) * 5000));
+        // Calculer le score en utilisant une approche logarithmique
+        $baseScore = 1000;
+        $score = round($baseScore - log($distance + 1) * 100);
 
         return $this->render('app/result.html.twig', [
             'distance' => $distance,
@@ -54,6 +54,24 @@ class AppController extends AbstractController
             'city' => $city,
         ]);
     }
+
+    #[Route("/game/validate-city/{cityId}", name: "app_validate_city")]
+    public function validateCity(int $cityId): Response
+    {
+        $city = $this->cityRepository->find($cityId);
+
+        if (!$city) {
+            throw $this->createNotFoundException('La ville n\'existe pas.');
+        }
+
+        // Marquer la ville comme validée (vous pouvez ajouter une propriété "validated" à l'entité City)
+        $city->setValidated(true);
+        $this->cityRepository->save($city, true);
+
+        // Rediriger vers la page d'accueil ou afficher un message de confirmation
+        return $this->redirectToRoute('app_home');
+    }
+
 
     /**
      * Calcule la distance entre deux coordonnées géographiques
