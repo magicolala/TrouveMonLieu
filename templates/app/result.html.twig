@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+
 {% block stylesheets %}
 	<style>
 		body {
@@ -24,16 +25,10 @@
 			border-radius: 4px;
 		}
 
-		.alert-success {
-			color: #155724;
-			background-color: #d4edda;
-			border-color: #c3e6cb;
-		}
-
-		.alert-danger {
-			color: #721c24;
-			background-color: #f8d7da;
-			border-color: #f5c6cb;
+		.alert-info {
+			color: #0c5460;
+			background-color: #d1ecf1;
+			border-color: #bee5eb;
 		}
 
 		.btn {
@@ -68,27 +63,22 @@
 		}
 	</style>
 {% endblock %}
+
 {% block body %}
 	<div class="container">
 		<h1>Résultat</h1>
 
-		{% if isCorrect %}
-			<div class="alert alert-success">
-				Félicitations ! Vous avez deviné correctement. La distance entre votre devinette et la position réelle est de
-				{{ distance|round(2) }}
-				kilomètres.
-			</div>
-		{% else %}
-			<div class="alert alert-danger">
-				Dommage ! Votre devinette n'était pas assez proche. La distance entre votre devinette et la position réelle est de
-				{{ distance|round(2) }}
-				kilomètres.
-			</div>
-		{% endif %}
+		<div class="alert alert-info">
+			Votre score est de
+			{{ score }}
+			points. La distance entre votre devinette et la position réelle est de
+			{{ distance|round(2) }}
+			kilomètres.
+		</div>
 
-        <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key=AIzaSyBK8jliI4T25vREkqsPkWmLLoMhJTYONMs" alt="Distance map" class="map-image">
-
+		<img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
 
 		<a href="{{ path('app_home') }}" class="btn btn-primary">Rejouer</a>
 	</div>
 {% endblock %}
+

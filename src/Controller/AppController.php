@@ -21,7 +21,7 @@ class AppController extends AbstractController
     public function index(): Response
     {
         $city = $this->cityRepository->findRandomCity();
-         
+
         return $this->render('app/index.html.twig', [
             'city' => $city,
         ]);
@@ -42,13 +42,16 @@ class AppController extends AbstractController
         // Calculer la distance entre les coordonnées devinées et les coordonnées réelles
         $distance = $this->calculateDistance($guessedLatitude, $guessedLongitude, $city->getLatitude(), $city->getLongitude());
 
-        // Déterminer si le joueur a deviné correctement ou non
-        $threshold = 50; // Seuil de distance en kilomètres
-        $isCorrect = $distance <= $threshold;
+        // Calculer le score en fonction de la distance
+        $maxDistance = 20000; // Distance maximale en kilomètres pour un score de 0
+        $score = round(max(0, 5000 - ($distance / $maxDistance) * 5000));
 
-    return $this->render('app/result.html.twig', [
+        return $this->render('app/result.html.twig', [
             'distance' => $distance,
-            'isCorrect' => $isCorrect,
+            'score' => $score,
+            'guessedLatitude' => $guessedLatitude,
+            'guessedLongitude' => $guessedLongitude,
+            'city' => $city,
         ]);
     }
 
