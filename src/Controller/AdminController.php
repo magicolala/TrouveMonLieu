@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Controller;
 
@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\UserRepository;
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -61,7 +62,7 @@ class AdminController extends AbstractController
     #[Route('/city/{id}/delete', name: 'admin_city_delete', methods: ['POST'])]
     public function deleteCity(Request $request, City $city, CityRepository $cityRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$city->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $city->getId(), $request->request->get('_token'))) {
             $cityRepository->remove($city, true);
         }
 
@@ -77,6 +78,16 @@ class AdminController extends AbstractController
 
         return $this->render('app/index.html.twig', [
             'city' => $city,
+        ]);
+    }
+
+    #[Route('/users', name: 'admin_users')]
+    public function userList(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findAll();
+
+        return $this->render('admin/user_list.html.twig', [
+            'users' => $users,
         ]);
     }
 }

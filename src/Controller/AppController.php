@@ -24,9 +24,11 @@ class AppController extends AbstractController
     public function index(): Response
     {
         $city = $this->cityRepository->findRandomCity();
+        $cityScoreAverages = $this->cityRepository->findCityScoreAverages();
 
         return $this->render('app/index.html.twig', [
             'city' => $city,
+            'cityScoreAverages' => $cityScoreAverages,
         ]);
     }
 

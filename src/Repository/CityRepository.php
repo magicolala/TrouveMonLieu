@@ -24,19 +24,19 @@ class CityRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c');
         $totalCities = $qb->select('COUNT(c.id)')->getQuery()->getSingleScalarResult();
-    
+
         if ($totalCities > 0) {
             $randomIndex = rand(0, $totalCities - 1);
-    
+
             $qb = $this->createQueryBuilder('c');
             $qb->select('c')
                 ->orderBy('c.id', 'ASC')
                 ->setFirstResult($randomIndex)
                 ->setMaxResults(1);
-    
+
             return $qb->getQuery()->getOneOrNullResult();
         }
-    
+
         return null;
     }
 
@@ -57,5 +57,14 @@ class CityRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-      
+
+    public function findCityScoreAverages()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id, c.name, AVG(s.distance) as averageDistance')
+            ->leftJoin('c.scores', 's')
+            ->groupBy('c.id')
+            ->getQuery()
+            ->getResult();
+    }
 }
