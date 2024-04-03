@@ -7,14 +7,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CityRepository;
+use App\Repository\UserRepository;
 
 class AppController extends AbstractController
 {
-    private $cityRepository;
+    private CityRepository $cityRepository;
+    private UserRepository $userRepository;
 
-    public function __construct(CityRepository $cityRepository)
+    public function __construct(CityRepository $cityRepository, UserRepository $userRepository)
     {
         $this->cityRepository = $cityRepository;
+        $this->userRepository = $userRepository;
     }
 
     #[Route('/', name: 'app_home')]
@@ -45,10 +48,14 @@ class AppController extends AbstractController
         // Calculer le score en utilisant une approche logarithmique
         $baseScore = 1000;
         $score = round($baseScore - log($distance + 1) * 100);
+        $scoreTotal = $this->getUser()->getScore() + $score;
+        $this->getUser()->setScore($scoreTotal);
+        $this->userRepository->save($this->getUser(), true);
 
         return $this->render('app/result.html.twig', [
             'distance' => $distance,
             'score' => $score,
+            'scoreTotal' => $scoreTotal,
             'guessedLatitude' => $guessedLatitude,
             'guessedLongitude' => $guessedLongitude,
             'city' => $city,

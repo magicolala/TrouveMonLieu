@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'enregistrer{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="page page-center">
+    <div class="container-tight py-4">
+        <div class="text-center mb-4">
+            <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg" height="36" alt=""></a>
+        </div>
+        <form class="card card-md" method="post" autocomplete="off">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">S'enregistrer</h2>
+                
+                {{ form_errors(registrationForm) }}
+
+                {{ form_start(registrationForm) }}
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.email, 'Adresse e-mail', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre adresse e-mail'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                        {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions d\'utilisation', {'label_attr': {'class': 'form-check-label'}}) }}
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-primary w-100">S'enregistrer</button>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

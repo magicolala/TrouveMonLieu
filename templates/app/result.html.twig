@@ -81,8 +81,15 @@
 
 		<a href="{{ path('app_home') }}" class="btn btn-primary">Rejouer</a>
 
-		<a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success">Valider</a>
-
+		{% if is_granted('ROLE_ADMIN') %}
+			<a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success">Valider</a>
+		{% endif %}
+		
+		<div class="alert alert-info">
+			Score total :
+			{{ scoreTotal }}
+			points
+		</div>
 	</div>
 {% endblock %}
 

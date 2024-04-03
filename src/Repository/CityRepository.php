@@ -23,7 +23,6 @@ class CityRepository extends ServiceEntityRepository
     public function findRandomCity(): ?City
     {
         $qb = $this->createQueryBuilder('c');
-        $qb->where('c.validated = true');
         $totalCities = $qb->select('COUNT(c.id)')->getQuery()->getSingleScalarResult();
     
         if ($totalCities > 0) {
@@ -31,7 +30,6 @@ class CityRepository extends ServiceEntityRepository
     
             $qb = $this->createQueryBuilder('c');
             $qb->select('c')
-                ->where('c.validated = true')
                 ->orderBy('c.id', 'ASC')
                 ->setFirstResult($randomIndex)
                 ->setMaxResults(1);
