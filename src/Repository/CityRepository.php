@@ -23,7 +23,7 @@ class CityRepository extends ServiceEntityRepository
     public function findRandomCity(): ?City
     {
         $qb = $this->createQueryBuilder('c');
-        $qb->where('c.validated = false');
+        $qb->where('c.validated = true');
         $totalCities = $qb->select('COUNT(c.id)')->getQuery()->getSingleScalarResult();
     
         if ($totalCities > 0) {
@@ -31,7 +31,7 @@ class CityRepository extends ServiceEntityRepository
     
             $qb = $this->createQueryBuilder('c');
             $qb->select('c')
-                ->where('c.validated = false')
+                ->where('c.validated = true')
                 ->orderBy('c.id', 'ASC')
                 ->setFirstResult($randomIndex)
                 ->setMaxResults(1);
@@ -50,6 +50,14 @@ class CityRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function remove(City $city, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($city);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
       
-    
 }

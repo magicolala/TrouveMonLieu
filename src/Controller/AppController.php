@@ -64,7 +64,7 @@ class AppController extends AbstractController
             throw $this->createNotFoundException('La ville n\'existe pas.');
         }
 
-        // Marquer la ville comme validée (vous pouvez ajouter une propriété "validated" à l'entité City)
+        // Marquer la ville comme validée
         $city->setValidated(true);
         $this->cityRepository->save($city, true);
 

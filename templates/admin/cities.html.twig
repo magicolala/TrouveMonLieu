@@ -1,65 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Admin - Liste des villes {% endblock %}
+{% block title %}
+	Admin - Liste des villes
+{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css">
 {% endblock %}
 
 {% block body %}
-    <div class="page-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="page-title">Administration des villes</h1>
-                </div>
-                <div class="col-auto ms-auto">
-                    <a href="{{ path('admin_city_new') }}" class="btn btn-primary">Ajouter une ville</a>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="page-header">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col">
+					<h1 class="page-title">Administration des villes</h1>
+				</div>
+				<div class="col-auto ms-auto">
+					<a href="{{ path('admin_city_new') }}" class="btn btn-primary">Ajouter une ville</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="page-body">
-        <div class="container">
-            <div class="card">
-                <div class="table-responsive">
-                    <table class="table table-vcenter card-table">
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Latitude</th>
-                                <th>Longitude</th>
-                                <th>Actions</th>
-                                <th class="w-1"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for city in cities %}
-                                <tr>
-                                    <td>{{ city.name }}</td>
-                                    <td>{{ city.latitude }}</td>
-                                    <td>{{ city.longitude }}</td>
-                                    <td><a href="{{ path('admin_city_play', {'id': city.id}) }}" class="btn btn-sm btn-success">Jouer</a></td>
-                                    <td>
-                                        <div class="btn-list flex-nowrap">
-                                            <a href="{{ path('admin_city_edit', {'id': city.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
-                                            <form method="post" action="{{ path('admin_city_delete', {'id': city.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ?');" style="display: inline-block;">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ city.id) }}">
-                                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="page-body">
+		<div class="container">
+			<div class="card">
+				<div class="table-responsive">
+					<table class="table table-vcenter card-table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Nom</th>
+								<th>Latitude</th>
+								<th>Longitude</th>
+								<th>Validée ?</th>
+								<th class="w-1"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for city in cities %}
+								<tr>
+									<td>{{city.id}}</td>
+									<td>{{ city.name }}</td>
+									<td>{{ city.latitude }}</td>
+									<td>{{ city.longitude }}</td>
+									<td>{{ city.isValidated ? 'Oui' : 'Non' }}</td>
+
+									<td>
+										<div class="btn-list flex-nowrap">
+											<a href="{{ path('admin_city_play', {'id': city.id}) }}" class="btn btn-sm btn-success">Jouer</a>
+
+											<a href="{{ path('admin_city_edit', {'id': city.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+											<form method="post" action="{{ path('admin_city_delete', {'id': city.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ?');" style="display: inline-block;">
+												<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ city.id) }}">
+												<button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+											</form>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</tbody>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	</div>
 {% endblock %}
-
 {% block javascripts %}
-    <script src="https://unpkg.com/@tabler/core@latest/dist/js/tabler.min.js"></script>
+	<script src="https://unpkg.com/@tabler/core@latest/dist/js/tabler.min.js"></script>
 {% endblock %}
+

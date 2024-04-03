@@ -1,0 +1,58 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.panorama {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.map {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.map:hover {
+  width: 400px;
+  height: 400px;
+}
+
+#guessForm {
+  text-align: center;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+div[jstcache="0"][style="position: absolute; left: 0px; top: 0px;"],
+div[style="display: inline-flex; position: absolute; right: 0px; bottom: 0px;"],
+img[alt="Google"] {
+  display: none !important;
+}

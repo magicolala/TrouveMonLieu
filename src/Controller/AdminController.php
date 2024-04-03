@@ -68,7 +68,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_cities');
     }
 
-    #[Route("/game/{id}", name: "admin_city_play", methods: "GET")]
+    #[Route("/city/{id}/play", name: "admin_city_play", methods: "GET")]
     public function play(City $city): Response
     {
         if (!$city) {
