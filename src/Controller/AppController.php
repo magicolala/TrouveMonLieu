@@ -13,6 +13,8 @@ use App\Service\DistanceCalculator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use App\Entity\Score;
+use App\Entity\Game;
+use App\Form\GameType;
 
 class AppController extends AbstractController
 {
@@ -122,6 +124,17 @@ class AppController extends AbstractController
 
         // Rediriger vers la page d'accueil ou afficher un message de confirmation
         return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/game/create', name: 'game_create')]
+    public function create(Request $request): Response
+    {
+        $game = new Game();
+        $form = $this->createForm(GameType::class, $game);
+
+        return $this->render('game/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
