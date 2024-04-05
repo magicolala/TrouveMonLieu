@@ -42,9 +42,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $scores;
 
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user')]
+    private Collection $games;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'players')]
+    private Collection $participatedGames;
+
+    #[ORM\OneToMany(targetEntity: GameScore::class, mappedBy: 'user')]
+    private Collection $gameScores;
+
     public function __construct()
     {
         $this->scores = new ArrayCollection();
+        $this->games = new ArrayCollection();
+        $this->participatedGames = new ArrayCollection();
+        $this->gameScores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,6 +170,93 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($score->getUser() === $this) {
                 $score->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            // set the owning side to null (unless already changed)
+            if ($game->getUser() === $this) {
+                $game->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getParticipatedGames(): Collection
+    {
+        return $this->participatedGames;
+    }
+
+    public function addParticipatedGame(Game $participatedGame): static
+    {
+        if (!$this->participatedGames->contains($participatedGame)) {
+            $this->participatedGames->add($participatedGame);
+            $participatedGame->addPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipatedGame(Game $participatedGame): static
+    {
+        if ($this->participatedGames->removeElement($participatedGame)) {
+            $participatedGame->removePlayer($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameScore>
+     */
+    public function getGameScores(): Collection
+    {
+        return $this->gameScores;
+    }
+
+    public function addGameScore(GameScore $gameScore): static
+    {
+        if (!$this->gameScores->contains($gameScore)) {
+            $this->gameScores->add($gameScore);
+            $gameScore->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameScore(GameScore $gameScore): static
+    {
+        if ($this->gameScores->removeElement($gameScore)) {
+            // set the owning side to null (unless already changed)
+            if ($gameScore->getUser() === $this) {
+                $gameScore->setUser(null);
             }
         }
 

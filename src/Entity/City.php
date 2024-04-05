@@ -30,9 +30,16 @@ class City
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'city', orphanRemoval: true)]
     private Collection $scores;
 
+    #[ORM\Column(length: 3, nullable: true)]
+    private ?string $country = null;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'cities')]
+    private Collection $games;
+
     public function __construct()
     {
         $this->scores = new ArrayCollection();
+        $this->games = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +120,45 @@ class City
             if ($score->getCity() === $this) {
                 $score->setCity(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removeCity($this);
         }
 
         return $this;

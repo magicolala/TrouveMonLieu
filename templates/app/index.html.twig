@@ -6,11 +6,7 @@
 
 {% block body %}
 	<h1>Trouve mon lieu</h1>
-<ul>
-    {% for cityScore in cityScoreAverages %}
-        <li>{{ cityScore.name }} - Moyenne des scores : {{ cityScore.averageDistance|round(2) }} km</li>
-    {% endfor %}
-</ul>
+	
 	<div id="pano" class="panorama"></div>
 	<div id="map" class="map"></div>
 
