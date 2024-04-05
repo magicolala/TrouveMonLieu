@@ -24,6 +24,9 @@ class Score
     #[ORM\Column]
     private ?float $distance = null;
 
+    #[ORM\Column]
+    private int $score;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +64,18 @@ class Score
     public function setDistance(float $distance): static
     {
         $this->distance = $distance;
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): static
+    {
+        $this->score = $score;
 
         return $this;
     }
