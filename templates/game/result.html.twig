@@ -1,73 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #f8f9fa;
-		}
-
-		.container {
-			max-width: 800px;
-			margin: 0 auto;
-			padding: 20px;
-		}
-
-		h1 {
-			color: #333;
-			margin-bottom: 20px;
-		}
-
-		.alert {
-			padding: 15px;
-			margin-bottom: 20px;
-			border: 1px solid transparent;
-			border-radius: 4px;
-		}
-
-		.alert-info {
-			color: #0c5460;
-			background-color: #d1ecf1;
-			border-color: #bee5eb;
-		}
-
-		.btn {
-			display: inline-block;
-			font-weight: 400;
-			color: #212529;
-			text-align: center;
-			vertical-align: middle;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-			background-color: transparent;
-			border: 1px solid transparent;
-			padding: 0.375rem 0.75rem;
-			font-size: 1rem;
-			line-height: 1.5;
-			border-radius: 0.25rem;
-			transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-		}
-
-		.btn-primary {
-			color: #fff;
-			background-color: #007bff;
-			border-color: #007bff;
-			margin-bottom: 20px;
-		}
-
-		.btn-primary:hover {
-			color: #fff;
-			background-color: #0069d9;
-			border-color: #0062cc;
-		}
-	</style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .map-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Ratio 16:9 pour une carte responsive */
+        }
+        
+        .map-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1>Résultat</h1>
+        <h1 class="my-4">Résultat</h1>
 
         <div class="alert alert-info">
             Round {{ round }} sur {{ totalRounds }}
@@ -77,16 +32,18 @@
             Votre score pour ce round est de {{ score }} points. La distance entre votre devinette et la position réelle est de {{ distance|round(2) }} kilomètres.
         </div>
 
-        <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
+        <div class="map-container mb-4">
+            <img src="https://maps.googleapis.com/maps/api/staticmap?size=2400x1800&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
+        </div>
 
         {% if round < totalRounds %}
-            <a href="{{ path('app_game', {'id': game.id, 'round': round + 1}) }}" class="btn btn-primary">Round suivant</a>
+            <a href="{{ path('app_game', {'id': game.id, 'round': round + 1}) }}" class="btn btn-primary mb-4">Round suivant</a>
         {% else %}
-            <a href="{{ path('app_home') }}" class="btn btn-primary">Nouvelle partie</a>
+            <a href="{{ path('app_home') }}" class="btn btn-primary mb-4">Nouvelle partie</a>
         {% endif %}
 
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success">Valider</a>
+            <a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success mb-4">Valider</a>
         {% endif %}
         
         <div class="alert alert-info">
@@ -94,4 +51,3 @@
         </div>
     </div>
 {% endblock %}
-

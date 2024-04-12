@@ -20,7 +20,8 @@ class GameType extends AbstractType
                 'label' => 'Nombre de rounds',
                 'attr' => [
                     'min' => 1,
-                    'max' => 10,
+                    'max' => 50,
+                    'readonly' => true,
                 ],
             ])
             ->add('cities', EntityType::class, [

@@ -1,10 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Créer un nouveau jeu</h1>
+	<h1>Créer un nouveau jeu</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit">Créer</button>
-    {{ form_end(form) }}
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button type="submit">Créer</button>
+	{{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var citiesCheckboxes = document.querySelectorAll('input[name="game[cities][]"]');
+        var roundsInput = document.querySelector('input[name="game[rounds]"]');
+
+        if (citiesCheckboxes.length > 0 && roundsInput) {
+            citiesCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    var selectedCities = Array.from(citiesCheckboxes).filter(checkbox => checkbox.checked);
+                    roundsInput.value = selectedCities.length;
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}

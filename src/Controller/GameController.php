@@ -88,7 +88,7 @@ class GameController extends AbstractController
         return $this->render('game/result.html.twig', [
             'distance' => $distance,
             'score' => $score,
-            'scoreTotal' => $scoreTotal,
+            'scoreTotal' => $gameScore->getScore(),
             'guessedLatitude' => $guessedLatitude,
             'guessedLongitude' => $guessedLongitude,
             'city' => $city,
