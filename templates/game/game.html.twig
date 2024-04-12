@@ -7,14 +7,11 @@
 {% block body %}
 	<h1>Trouve mon lieu</h1>
 
-	<div class="round-info">
-		<p>Round
-			{{ round }}
-			sur
-			{{ totalRounds }}</p>
-	</div>
+  <div class="round-info">
+    <p>Round {{ round }} sur {{ totalRounds }}</p>
+</div>
 
-
+	
 	<div id="pano" class="panorama"></div>
 	<div id="map" class="map"></div>
 
@@ -30,9 +27,9 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
 	<script>
 		var cityData = {
-latitude: {{ city.latitude }},
-longitude: {{ city.longitude }}
-};
+            latitude: {{ city.latitude }},
+            longitude: {{ city.longitude }}
+        };
 	</script>
 	<script src="{{ asset('assets/js/app.js') }}"></script>
 {% endblock %}

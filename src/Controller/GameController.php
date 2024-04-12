@@ -63,28 +63,38 @@ class GameController extends AbstractController
         // Calculer le score en utilisant une approche logarithmique
         $score = $this->calculateScore($distance);
 
+        // Vérifier si c'est le premier round de la partie
+        if ($round === 1) {
+            // Effacer le score précédent de l'utilisateur pour cette partie
+            $this->gameScoreRepository->deleteScoresForUserAndGame($this->getUser(), $game);
+        }
+
         // Créer une nouvelle instance de GameScore
         $gameScore = new GameScore();
-        $gameScore->setGame($game); // Assurez-vous d'avoir une instance de Game disponible
+        $gameScore->setGame($game);
         $gameScore->setUser($this->getUser());
-        $gameScore->setRound($round); // Assurez-vous d'avoir la valeur du round disponible
+        $gameScore->setRound($round);
         $gameScore->setScore($score);
 
         // Enregistrer le score dans la base de données
         $this->gameScoreRepository->save($gameScore, true);
+
 
         // Mettre à jour le score total de l'utilisateur
         $scoreTotal = $this->getUser()->getScore() + $score;
         $this->getUser()->setScore($scoreTotal);
         $this->userRepository->save($this->getUser(), true);
 
-        return $this->render('app/result.html.twig', [
+        return $this->render('game/result.html.twig', [
             'distance' => $distance,
             'score' => $score,
             'scoreTotal' => $scoreTotal,
             'guessedLatitude' => $guessedLatitude,
             'guessedLongitude' => $guessedLongitude,
             'city' => $city,
+            'round' => $round,
+            'game' => $game,
+            'totalRounds' => $game->getRounds(),
         ]);
     }
 

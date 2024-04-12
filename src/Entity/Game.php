@@ -34,6 +34,8 @@ class Game
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    private ?int $userScore;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
@@ -165,5 +167,17 @@ class Game
         $this->name = $name;
 
         return $this;
+    }
+
+
+    public function setUserScore(?int $userScore): self
+    {
+        $this->userScore = $userScore;
+
+        return $this;
+    }
+
+    public function getUserScore():?int {
+        return $this->userScore;
     }
 }

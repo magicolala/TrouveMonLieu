@@ -1,23 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 {% endblock %}
 
 {% block body %}
-    <h1>Trouve mon lieu</h1>
+	<div class="container">
+		<h1 class="text-center my-4">Trouve mon lieu</h1>
+		<div class="text-center mt-4">
+			<a href="{{ path('game_create') }}" class="btn btn-success">Créer une nouvelle partie</a>
+		</div>
+		<h2>Choisissez une partie :</h2>
 
-    <h2>Choisissez une partie :</h2>
+		<div class="row">
+			{% for game in games %}
+				<div class="col-md-4 mb-4">
+					<div class="card">
+						<div class="card-body">
+							<h3 class="card-title">{{ game.name }}</h3>
+							<p class="card-text">Nombre de rounds :
+								{{ game.rounds }}</p>
+							{% if game.userScore is not null %}
+								<p class="card-text">Votre score :
+									{{ game.userScore }}</p>
+							{% else %}
+								<p class="card-text">Vous n'avez pas encore joué à ce jeu.</p>
+							{% endif %}
+							<a href="{{path('app_game', {id: game.id})}}" class="btn btn-primary">Jouer</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
 
-    <ul>
-        {% for game in games %}
-            <li><a href="{{ path('app_game', {'id': game.id}) }}">{{ game.name }}</a></li>
-				{% else %}
-					<li>Aucune partie pour le moment</li>
-        {% endfor %}
-    </ul>
-{% endblock %}
 
-{% block javascripts %}
+	</div>
 {% endblock %}
 

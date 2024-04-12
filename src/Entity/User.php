@@ -51,6 +51,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: GameScore::class, mappedBy: 'user')]
     private Collection $gameScores;
 
+    private int $userScore; 
+
     public function __construct()
     {
         $this->scores = new ArrayCollection();

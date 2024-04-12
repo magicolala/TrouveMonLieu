@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\GameScore;
+use App\Entity\User;
+use App\Entity\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * @extends ServiceEntityRepository<GameScore>
@@ -28,6 +31,18 @@ class GameScoreRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function deleteScoresForUserAndGame(User $user, Game $game): void
+    {
+        $this->createQueryBuilder('gs')
+            ->delete()
+            ->where('gs.user = :user')
+            ->andWhere('gs.game = :game')
+            ->setParameter('user', $user)
+            ->setParameter('game', $game)
+            ->getQuery()
+            ->execute();
     }
 
     //    /**

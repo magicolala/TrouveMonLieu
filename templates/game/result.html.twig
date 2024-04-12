@@ -66,30 +66,32 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<h1>Résultat</h1>
+    <div class="container">
+        <h1>Résultat</h1>
 
-		<div class="alert alert-info">
-			Votre score est de
-			{{ score }}
-			points. La distance entre votre devinette et la position réelle est de
-			{{ distance|round(2) }}
-			kilomètres.
-		</div>
+        <div class="alert alert-info">
+            Round {{ round }} sur {{ totalRounds }}
+        </div>
 
-		<img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
+        <div class="alert alert-info">
+            Votre score pour ce round est de {{ score }} points. La distance entre votre devinette et la position réelle est de {{ distance|round(2) }} kilomètres.
+        </div>
 
-		<a href="{{ path('app_home') }}" class="btn btn-primary">Rejouer</a>
+        <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
 
-		{% if is_granted('ROLE_ADMIN') %}
-			<a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success">Valider</a>
-		{% endif %}
-		
-		<div class="alert alert-info">
-			Score total :
-			{{ scoreTotal }}
-			points
-		</div>
-	</div>
+        {% if round < totalRounds %}
+            <a href="{{ path('app_game', {'id': game.id, 'round': round + 1}) }}" class="btn btn-primary">Round suivant</a>
+        {% else %}
+            <a href="{{ path('app_home') }}" class="btn btn-primary">Nouvelle partie</a>
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success">Valider</a>
+        {% endif %}
+        
+        <div class="alert alert-info">
+            Score total : {{ scoreTotal }} points
+        </div>
+    </div>
 {% endblock %}
 

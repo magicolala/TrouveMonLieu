@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Repository\GameScoreRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AppController extends AbstractController
 {
@@ -21,11 +23,17 @@ class AppController extends AbstractController
         $this->cityRepository = $cityRepository;
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'app_home')]
-    public function index(GameRepository $gameRepository): Response
+    public function index(GameRepository $gameRepository, GameScoreRepository $gameScoreRepository): Response
     {
         $games = $gameRepository->findAll();
-         
+
+        foreach ($games as $game) {
+            $score = $gameScoreRepository->findOneBy(['game' => $game, 'user' => $this->getUser()]);
+            $game->setUserScore($score ? $score->getScore() : null);
+        }
+
         return $this->render('app/index.html.twig', [
             'games' => $games,
         ]);
