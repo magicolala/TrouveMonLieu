@@ -36,4 +36,17 @@ class GameController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/game/{id}', name: 'app_game')]
+    public function game(Game $game): Response
+    {
+        $city = $game->getCities()->first();
+        $round = 1; // Définissez la valeur appropriée pour le round actuel
+
+        return $this->render('game/game.html.twig', [
+            'game' => $game,
+            'city' => $city,
+            'round' => $round,
+        ]);
+    }
 }

@@ -15,6 +15,7 @@ class GameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('name')
             ->add('rounds', IntegerType::class, [
                 'label' => 'Nombre de rounds',
                 'attr' => [

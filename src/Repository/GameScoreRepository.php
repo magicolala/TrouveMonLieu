@@ -21,6 +21,15 @@ class GameScoreRepository extends ServiceEntityRepository
         parent::__construct($registry, GameScore::class);
     }
 
+    public function save(GameScore $gameScore, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($gameScore);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     //    /**
     //     * @return GameScore[] Returns an array of GameScore objects
     //     */

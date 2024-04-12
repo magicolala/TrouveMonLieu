@@ -21,6 +21,15 @@ class ScoreRepository extends ServiceEntityRepository
         parent::__construct($registry, Score::class);
     }
 
+    public function save(Score $score, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($score);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     //    /**
     //     * @return Score[] Returns an array of Score objects
     //     */

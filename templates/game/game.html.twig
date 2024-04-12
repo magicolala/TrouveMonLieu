@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+{% endblock %}
+
+{% block body %}
+	<h1>Trouve mon lieu</h1>
+	
+	<div id="pano" class="panorama"></div>
+	<div id="map" class="map"></div>
+
+	<form id="guessForm" action="{{ path('game_check_answer', {'game': game.id, 'round': round}) }}" method="post" data-city-id="{{ city.id }}">
+		<input type="hidden" name="cityId" value="{{ city.id }}">
+		<input type="hidden" name="latitude" id="guessLatitude">
+		<input type="hidden" name="longitude" id="guessLongitude">
+		<button type="submit">Soumettre</button>
+	</form>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://maps.googleapis.com/maps/api/js?key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+	<script>
+		var cityData = {
+            latitude: {{ city.latitude }},
+            longitude: {{ city.longitude }}
+        };
+	</script>
+	<script src="{{ asset('assets/js/app.js') }}"></script>
+{% endblock %}
+

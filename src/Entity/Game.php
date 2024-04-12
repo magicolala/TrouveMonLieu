@@ -31,6 +31,9 @@ class Game
     #[ORM\OneToMany(targetEntity: GameScore::class, mappedBy: 'game')]
     private Collection $gameScores;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
@@ -148,6 +151,18 @@ class Game
                 $gameScore->setGame(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

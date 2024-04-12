@@ -12,30 +12,32 @@ use App\Repository\ScoreRepository;
 use App\Service\DistanceCalculator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use App\Entity\Score;
+use App\Entity\GameScore;
 use App\Entity\Game;
 use App\Form\GameType;
+use App\Repository\GameRepository;
+use App\Repository\GameScoreRepository;
 
 class AppController extends AbstractController
 {
     private CityRepository $cityRepository;
     private UserRepository $userRepository;
-    private ScoreRepository $scoreRepository;
+    private GameScoreRepository $gameScoreRepository;
 
-    public function __construct(CityRepository $cityRepository, UserRepository $userRepository, ScoreRepository $scoreRepository)
+    public function __construct(CityRepository $cityRepository, UserRepository $userRepository, GameScoreRepository $gameScoreRepository)
     {
         $this->cityRepository = $cityRepository;
         $this->userRepository = $userRepository;
-        $this->scoreRepository = $scoreRepository;
+        $this->gameScoreRepository = $gameScoreRepository;
     }
 
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(GameRepository $gameRepository): Response
     {
-        $city = $this->cityRepository->findRandomCity();
-
+        $games = $gameRepository->findAll();
+         
         return $this->render('app/index.html.twig', [
-            'city' => $city,
+            'games' => $games,
         ]);
     }
 
@@ -45,8 +47,8 @@ class AppController extends AbstractController
      * @param Request $request La requête HTTP contenant les données soumises par le joueur
      * @return Response La réponse HTTP contenant le résultat de la vérification
      */
-    #[Route("/game/check-answer", name: "game_check_answer", methods: "POST")]
-    public function checkAnswer(Request $request, DistanceCalculator $distanceCalculator): Response
+    #[Route("/game/check-answer/{game}/{round}", name: "game_check_answer", methods: "POST")]
+    public function checkAnswer(Request $request, DistanceCalculator $distanceCalculator, Game $game, int $round): Response
     {
         // Récupérer les coordonnées soumises par le joueur
         $guessedLatitude = $request->request->get('latitude');
@@ -78,15 +80,15 @@ class AppController extends AbstractController
         // Calculer le score en utilisant une approche logarithmique
         $score = $this->calculateScore($distance);
 
-        // Créer une nouvelle instance de Score
-        $scoreEntity = new Score();
-        $scoreEntity->setCity($city);
-        $scoreEntity->setUser($this->getUser());
-        $scoreEntity->setDistance($distance);
-        $scoreEntity->setScore($score);
+        // Créer une nouvelle instance de GameScore
+        $gameScore = new GameScore();
+        $gameScore->setGame($game); // Assurez-vous d'avoir une instance de Game disponible
+        $gameScore->setUser($this->getUser());
+        $gameScore->setRound($round); // Assurez-vous d'avoir la valeur du round disponible
+        $gameScore->setScore($score);
 
-            // Enregistrer le score dans la base de données
-            $this->scoreRepository->save($scoreEntity, true);
+        // Enregistrer le score dans la base de données
+        $this->gameScoreRepository->save($gameScore, true);
 
         // Mettre à jour le score total de l'utilisateur
         $scoreTotal = $this->getUser()->getScore() + $score;
