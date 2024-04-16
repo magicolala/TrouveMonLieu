@@ -87,6 +87,17 @@ class Game
         return $this->cities;
     }
 
+    /**
+     * @param Collection<int, City> $cities
+     * @return self
+     */
+    public function setCities(Collection $cities): self
+    {
+        $this->cities = $cities;
+
+        return $this;
+    }
+
     public function addCity(City $city): static
     {
         if (!$this->cities->contains($city)) {
@@ -177,7 +188,8 @@ class Game
         return $this;
     }
 
-    public function getUserScore():?int {
+    public function getUserScore(): ?int
+    {
         return $this->userScore;
     }
 }

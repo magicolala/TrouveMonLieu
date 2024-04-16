@@ -28,13 +28,19 @@
             Round {{ round }} sur {{ totalRounds }}
         </div>
 
-        <div class="alert alert-info">
-            Votre score pour ce round est de {{ score }} points. La distance entre votre devinette et la position réelle est de {{ distance|round(2) }} kilomètres.
-        </div>
+        {% if score == 0 %}
+            <div class="alert alert-warning">
+                Aucune coordonnée n'a été fournie. Votre score pour ce round est de 0 point.
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Votre score pour ce round est de {{ score }} points. La distance entre votre devinette et la position réelle est de {{ distance|round(2) }} kilomètres.
+            </div>
 
-        <div class="map-container mb-4">
-            <img src="https://maps.googleapis.com/maps/api/staticmap?size=2400x1800&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
-        </div>
+            <div class="map-container mb-4">
+                <img src="https://maps.googleapis.com/maps/api/staticmap?size=2400x1800&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
+            </div>
+        {% endif %}
 
         {% if round < totalRounds %}
             <a href="{{ path('app_game', {'id': game.id, 'round': round + 1}) }}" class="btn btn-primary mb-4">Round suivant</a>

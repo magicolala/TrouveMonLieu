@@ -15,6 +15,7 @@ use App\Entity\Game;
 use App\Entity\GameScore;
 use App\Repository\CityRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 class GameController extends AbstractController
@@ -44,12 +45,10 @@ class GameController extends AbstractController
         $cityId = $request->request->get('cityId');
 
         // Validation des entrées utilisateur
-        if (!is_numeric($guessedLatitude) || !is_numeric($guessedLongitude) || !is_numeric($cityId)) {
+        if (!is_numeric($cityId)) {
             throw new BadRequestHttpException('Je n\'ai pas compris tes coordonnées.');
         }
 
-        $guessedLatitude = floatval($guessedLatitude);
-        $guessedLongitude = floatval($guessedLongitude);
         $cityId = intval($cityId);
         $city = $cityRepository->find($cityId);
 
@@ -57,11 +56,23 @@ class GameController extends AbstractController
             throw $this->createNotFoundException('City not found');
         }
 
-        // Calculer la distance entre les coordonnées devinées et les coordonnées réelles
-        $distance = $distanceCalculator->calculateDistance($guessedLatitude, $guessedLongitude, $city->getLatitude(), $city->getLongitude());
+        // Vérifier si les valeurs de latitude et longitude sont présentes
+        if (is_numeric($guessedLatitude) && is_numeric($guessedLongitude)) {
+            $guessedLatitude = floatval($guessedLatitude);
+            $guessedLongitude = floatval($guessedLongitude);
 
-        // Calculer le score en utilisant une approche logarithmique
-        $score = $this->calculateScore($distance);
+            // Calculer la distance entre les coordonnées devinées et les coordonnées réelles
+            $distance = $distanceCalculator->calculateDistance($guessedLatitude, $guessedLongitude, $city->getLatitude(), $city->getLongitude());
+
+            // Calculer le score en utilisant une approche logarithmique
+            $score = $this->calculateScore($distance);
+        } else {
+            // Si les valeurs de latitude et longitude ne sont pas présentes, attribuer un score de 0
+            $score = 0;
+            $distance = null;
+            $guessedLatitude = null;
+            $guessedLongitude = null;
+        }
 
         // Vérifier si c'est le premier round de la partie
         if ($round === 1) {
@@ -123,10 +134,23 @@ class GameController extends AbstractController
     }
 
     #[Route('/game/{id}/{round}', name: 'app_game', defaults: ['round' => 1])]
-    public function game(Game $game, int $round): Response
+    public function game(Game $game, int $round, CityRepository $cityRepository): Response
     {
-        $cities = $game->getCities();
+        $allCities = $game->getCities()->toArray();
         $totalRounds = $game->getRounds();
+
+        if ($round === 1) {
+            // Mélanger aléatoirement l'ordre des villes
+            shuffle($allCities);
+
+            // Sélectionner les villes uniques pour le jeu
+            $selectedCities = array_slice($allCities, 0, $totalRounds);
+
+            // Stocker les identifiants des villes sélectionnées dans le jeu
+            $game->setCities(new ArrayCollection($selectedCities));
+        }
+
+        $cities = $game->getCities();
 
         if ($round > $totalRounds) {
             // Rediriger vers une page de fin de jeu ou afficher un message
