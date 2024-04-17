@@ -34,28 +34,28 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
 	<script>
 		var cityData = {
-latitude: {{ city.latitude }},
-longitude: {{ city.longitude }}
-};
+			latitude: {{ city.latitude }},
+			longitude: {{ city.longitude }}
+		};
 	</script>
 	<script src="{{ asset('assets/js/app.js') }}"></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-				var timeLeft = 120; // Temps initial en secondes
-				var timerElement = document.getElementById('time');
-				var gameForm = document.getElementById('guessForm');
+		document.addEventListener('DOMContentLoaded', function () {
+			var timeLeft = 120; // Temps initial en secondes
+			var timerElement = document.getElementById('time');
+			var gameForm = document.getElementById('guessForm');		
 
-				var timerInterval = setInterval(function() {
-						timeLeft--;
-						timerElement.textContent = timeLeft;
+			var timerInterval = setInterval(function () {
+				timeLeft--;
+				timerElement.textContent = timeLeft;
 
-						if (timeLeft <= 0) {
-								clearInterval(timerInterval);
-								// Soumettre automatiquement le formulaire lorsque le temps est écoulé
-								gameForm.submit();
-						}
-				}, 1000);
+				if (timeLeft <= 0) {
+					clearInterval(timerInterval);
+					// Soumettre automatiquement le formulaire lorsque le temps est écoulé
+					gameForm.submit();
+				}
+			}, 1000);
 		});
-</script>
+	</script>
 {% endblock %}
 
