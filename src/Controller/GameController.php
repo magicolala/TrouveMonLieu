@@ -12,6 +12,7 @@ use App\Repository\UserRepository;
 use App\Repository\GameScoreRepository;
 use App\Service\DistanceCalculator;
 use App\Entity\Game;
+use App\Entity\User;
 use App\Entity\GameScore;
 use App\Repository\CityRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -90,16 +91,25 @@ class GameController extends AbstractController
         // Enregistrer le score dans la base de données
         $this->gameScoreRepository->save($gameScore, true);
 
-
         // Mettre à jour le score total de l'utilisateur
-        $scoreTotal = $this->getUser()->getScore() + $score;
-        $this->getUser()->setScore($scoreTotal);
-        $this->userRepository->save($this->getUser(), true);
+        $user = $this->getUser();
+
+        if ($user instanceof User) {
+            $scoreTotal = $user->getScore() + $score;
+            $user->setScore($scoreTotal);
+            $this->userRepository->save($user, true);
+        }
+
+        // Mettre à jour le score total de la partie
+        $gameScores = $this->gameScoreRepository->findBy(['game' => $game, 'user' => $this->getUser()]);
+        $totalScore = array_sum(array_map(function (GameScore $gameScore) {
+            return $gameScore->getScore();
+        }, $gameScores));
 
         return $this->render('game/result.html.twig', [
             'distance' => $distance,
             'score' => $score,
-            'scoreTotal' => $gameScore->getScore(),
+            'scoreTotal' => $totalScore,
             'guessedLatitude' => $guessedLatitude,
             'guessedLongitude' => $guessedLongitude,
             'city' => $city,
@@ -179,6 +189,7 @@ class GameController extends AbstractController
     {
         $baseScore = 1000;
         $score = round($baseScore - log($distance + 1) * 100);
+
         return $score;
     }
 }
