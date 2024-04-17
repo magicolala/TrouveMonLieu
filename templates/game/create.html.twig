@@ -7,6 +7,8 @@
 	{{ form_widget(form) }}
 	<button type="submit">Créer</button>
 	{{ form_end(form) }}
+    <a href="{{ path('create_city') }}">Ajouter une nouvelle ville</a>
+
 {% endblock %}
 
 {% block javascripts %}

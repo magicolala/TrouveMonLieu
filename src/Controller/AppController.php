@@ -14,10 +14,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AppController extends AbstractController
 {
     private CityRepository $cityRepository;
+    private GameRepository $gameRepository;
 
-    public function __construct(CityRepository $cityRepository)
+    public function __construct(CityRepository $cityRepository, GameRepository $gameRepository)
     {
         $this->cityRepository = $cityRepository;
+        $this->gameRepository = $gameRepository;
     }
 
     #[IsGranted('ROLE_USER')]
@@ -27,10 +29,10 @@ class AppController extends AbstractController
         $games = $gameRepository->findAll();
 
         foreach ($games as $game) {
-            $score = $gameScoreRepository->findOneBy(['game' => $game, 'user' => $this->getUser()]);
-            $game->setUserScore($score ? $score->getScore() : null);
+            $totalScore = $gameScoreRepository->findTotalScoreByGame($game, $this->getUser());
+            $game->setUserScore($totalScore);
         }
-
+    
         return $this->render('app/index.html.twig', [
             'games' => $games,
         ]);
@@ -59,4 +61,13 @@ class AppController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    #[Route("/best-scores", name: "app_best_scores")]
+    public function bestScores(): Response
+    {
+        $bestScores = $this->gameRepository->findBestScoresByGame();
+
+        return $this->render('app/best_scores.html.twig', [
+            'bestScores' => $bestScores,
+        ]);
+    }
 }

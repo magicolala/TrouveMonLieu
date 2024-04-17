@@ -45,28 +45,24 @@ class GameScoreRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    //    /**
-    //     * @return GameScore[] Returns an array of GameScore objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('g.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findTotalScoreByGame(Game $game, User $user): ?int
+    {
+        $query = $this->createQueryBuilder('gs')
+            ->select('gs.round AS round_id, MAX(gs.score) AS max_score')
+            ->andWhere('gs.game = :game')
+            ->andWhere('gs.user = :user')
+            ->groupBy('gs.round')
+            ->setParameter('game', $game)
+            ->setParameter('user', $user)
+            ->getQuery();
 
-    //    public function findOneBySomeField($value): ?GameScore
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $roundScores = $query->getResult();
+
+        $totalBestScore = 0;
+        foreach ($roundScores as $roundScore) {
+            $totalBestScore += $roundScore['max_score'];
+        }
+
+        return $totalBestScore;
+    }
 }

@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+        #streetViewMap {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Ajouter une nouvelle ville</h1>
+
+    <div id="map"></div>
+    <div id="streetViewMap"></div>
+
+    <form id="newCityForm" action="{{ path('create_city') }}" method="post">
+        <div class="form-group">
+            <label for="cityName">Nom de la ville :</label>
+            <input type="text" id="cityName" name="cityName" required>
+        </div>
+        <input type="hidden" id="cityLatitude" name="cityLatitude">
+        <input type="hidden" id="cityLongitude" name="cityLongitude">
+        <button type="submit">Ajouter</button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var map;
+        var marker;
+        var panorama;
+
+        function initMap() {
+            var defaultLatitude = 48.8566;
+            var defaultLongitude = 2.3522;
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: defaultLatitude, lng: defaultLongitude },
+                zoom: 8
+            });
+
+            panorama = new google.maps.StreetViewPanorama(document.getElementById('streetViewMap'), {
+                position: { lat: defaultLatitude, lng: defaultLongitude },
+                pov: {
+                    heading: 34,
+                    pitch: 10
+                }
+            });
+
+            map.addListener('click', function(event) {
+                var latitude = event.latLng.lat();
+                var longitude = event.latLng.lng();
+
+                document.getElementById('cityLatitude').value = latitude;
+                document.getElementById('cityLongitude').value = longitude;
+
+                if (marker) {
+                    marker.setPosition(event.latLng);
+                } else {
+                    marker = new google.maps.Marker({
+                        position: event.latLng,
+                        map: map
+                    });
+                }
+
+                panorama.setPosition(event.latLng);
+            });
+        }
+
+        var newCityForm = document.getElementById('newCityForm');
+
+        newCityForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(newCityForm);
+            var url = newCityForm.getAttribute('action');
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    // Redirigez vers la page de création de partie ou effectuez d'autres actions nécessaires
+                    // ...
+                } else {
+                    // Gérez les erreurs
+                    // ...
+                }
+            });
+        });
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+{% endblock %}

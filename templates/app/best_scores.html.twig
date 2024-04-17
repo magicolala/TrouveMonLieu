@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<h1>Meilleurs scores par partie</h1>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Partie</th>
+					<th>Meilleur score</th>
+					<th>Joueur</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for score in bestScores %}
+					<tr>
+						<td>
+							<a href="{{path('app_game', {'id':score.gameId})}}">{{ score.name }}</a>
+						</td>
+						<td>{{ score.bestScore }}</td>
+						<td>{{ score.username }}
+							({{ score.email }})</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<a href="{{ path('app_home') }}" class="btn btn-primary">Retour</a>
+	</div>
+{% endblock %}

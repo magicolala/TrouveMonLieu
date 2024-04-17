@@ -27,9 +27,6 @@ class City
     #[ORM\Column(type: 'boolean')]
     private $validated = false;
 
-    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'city', orphanRemoval: true)]
-    private Collection $scores;
-
     #[ORM\Column(length: 3, nullable: true)]
     private ?string $country = null;
 
@@ -38,7 +35,6 @@ class City
 
     public function __construct()
     {
-        $this->scores = new ArrayCollection();
         $this->games = new ArrayCollection();
     }
 
@@ -91,36 +87,6 @@ class City
     public function setValidated(bool $validated): self
     {
         $this->validated = $validated;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Score>
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
-    public function addScore(Score $score): static
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores->add($score);
-            $score->setCity($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): static
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getCity() === $this) {
-                $score->setCity(null);
-            }
-        }
 
         return $this;
     }

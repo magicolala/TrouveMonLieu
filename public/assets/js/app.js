@@ -31,6 +31,8 @@ function createMap() {
   return new google.maps.Map(document.querySelector(".map"), {
     center: { lat: 27.26811, lng: 130.01776 },
     zoom: 2,
+    streetViewControl: false, // Désactive le contrôle StreetView
+    mapTypeControl: false, // Désactive le contrôle de type de carte (plan, satellite, etc.)
     styles: [
       {
         featureType: "road",
@@ -50,6 +52,7 @@ function createPanorama(latitude, longitude) {
   return new google.maps.StreetViewPanorama(document.querySelector(".panorama"), {
     position: { lat: latitude, lng: longitude },
     pov: { heading: 34, pitch: 10 },
+    zoom: 0,
     address: false,
     control: false,
     fullscreenControl: true,

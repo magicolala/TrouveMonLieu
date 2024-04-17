@@ -10,11 +10,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\UserRepository;
 use App\Repository\GameScoreRepository;
+use App\Repository\ScoreRepository;
 use App\Service\DistanceCalculator;
 use App\Entity\Game;
+use App\Entity\City;
 use App\Entity\User;
 use App\Entity\GameScore;
 use App\Repository\CityRepository;
+use App\Repository\GameRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -23,11 +26,13 @@ class GameController extends AbstractController
 {
     private UserRepository $userRepository;
     private GameScoreRepository $gameScoreRepository;
+    private GameRepository $gameRepository;
 
-    public function __construct(UserRepository $userRepository, GameScoreRepository $gameScoreRepository)
+    public function __construct(UserRepository $userRepository, GameScoreRepository $gameScoreRepository, GameRepository $gameRepository)
     {
         $this->userRepository = $userRepository;
         $this->gameScoreRepository = $gameScoreRepository;
+        $this->gameRepository = $gameRepository;
     }
     /**
      * Vérifie la réponse du joueur et calcule le score.
@@ -106,6 +111,13 @@ class GameController extends AbstractController
             return $gameScore->getScore();
         }, $gameScores));
 
+        // Vérifier si le score total est supérieur au meilleur score de la partie
+        if ($totalScore > $game->getBestScore()) {
+            $game->setBestScore($totalScore);
+            $game->setBestScoreUser($this->getUser());
+            $this->gameRepository->save($game, true);
+        }
+
         return $this->render('game/result.html.twig', [
             'distance' => $distance,
             'score' => $score,
@@ -175,6 +187,37 @@ class GameController extends AbstractController
             'round' => $round,
             'totalRounds' => $totalRounds,
         ]);
+    }
+
+    #[Route("/city/create", name: "create_city", methods: ["GET", "POST"])]
+    public function createCity(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($request->isMethod('POST')) {
+            $cityName = $request->request->get('cityName');
+            $cityLatitude = $request->request->get('cityLatitude');
+            $cityLongitude = $request->request->get('cityLongitude');
+
+            // Validez les données du formulaire
+            if (empty($cityName) || empty($cityLatitude) || empty($cityLongitude)) {
+                // Gérez les erreurs de validation
+                $this->addFlash('error', 'Veuillez remplir tous les champs requis.');
+                return $this->redirectToRoute('create_city');
+            }
+
+            $city = new City();
+            $city->setName($cityName);
+            $city->setLatitude($cityLatitude);
+            $city->setLongitude($cityLongitude);
+
+            $entityManager->persist($city);
+            $entityManager->flush();
+
+            // Redirigez vers la page de création de partie avec un message de succès
+            $this->addFlash('success', 'La ville a été ajoutée avec succès.');
+            return $this->redirectToRoute('game_create');
+        }
+
+        return $this->render('city/create.html.twig');
     }
 
     /**

@@ -28,6 +28,10 @@
 							{% else %}
 								<p class="card-text">Vous n'avez pas encore joué à ce jeu.</p>
 							{% endif %}
+							{% if game.bestScore is not null %}
+								<p class="card-text">Meilleur score :
+									{{ game.bestScore }}</p>
+							{% endif %}
 							<a href="{{path('app_game', {id: game.id})}}" class="btn btn-primary">Jouer</a>
 						</div>
 					</div>

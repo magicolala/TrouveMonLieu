@@ -36,6 +36,16 @@ class Game
 
     private ?int $userScore;
 
+
+    #[ORM\Column(nullable: true)]
+    private $bestScore = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private $bestScoreUser;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
@@ -191,5 +201,29 @@ class Game
     public function getUserScore(): ?int
     {
         return $this->userScore;
+    }
+
+    public function getBestScore(): ?int
+    {
+        return $this->bestScore;
+    }
+
+    public function setBestScore(?int $bestScore): self
+    {
+        $this->bestScore = $bestScore;
+
+        return $this;
+    }
+
+    public function getBestScoreUser(): ?User
+    {
+        return $this->bestScoreUser;
+    }
+
+    public function setBestScoreUser(?User $bestScoreUser): self
+    {
+        $this->bestScoreUser = $bestScoreUser;
+
+        return $this;
     }
 }

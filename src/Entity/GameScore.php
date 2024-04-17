@@ -25,6 +25,9 @@ class GameScore
     #[ORM\Column(nullable: true)]
     private ?int $score = null;
 
+    #[ORM\Column]
+    private ?int $gameId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class GameScore
     public function setScore(?int $score): static
     {
         $this->score = $score;
+
+        return $this;
+    }
+
+    public function getGameId(): ?int
+    {
+        return $this->gameId;
+    }
+
+    public function setGameId(int $gameId): static
+    {
+        $this->gameId = $gameId;
 
         return $this;
     }

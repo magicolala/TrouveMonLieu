@@ -39,9 +39,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $score = 0;
 
-    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $scores;
-
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user')]
     private Collection $games;
 
@@ -51,11 +48,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: GameScore::class, mappedBy: 'user')]
     private Collection $gameScores;
 
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $username = null;
+
     private int $userScore; 
 
     public function __construct()
     {
-        $this->scores = new ArrayCollection();
         $this->games = new ArrayCollection();
         $this->participatedGames = new ArrayCollection();
         $this->gameScores = new ArrayCollection();
@@ -148,35 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Score>
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
 
-    public function addScore(Score $score): static
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores->add($score);
-            $score->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): static
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getUser() === $this) {
-                $score->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Game>
@@ -261,6 +232,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $gameScore->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }

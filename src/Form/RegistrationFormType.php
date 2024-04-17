@@ -22,6 +22,9 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Email',
                 'help' => 'We\'ll never share your email with anyone else.',
             ])
+            ->add('username', TextType::class, [
+                'label' => 'Username'
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'J\'accepte les conditions d\'utilisation',
