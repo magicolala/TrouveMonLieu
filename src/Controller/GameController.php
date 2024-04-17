@@ -134,7 +134,7 @@ class GameController extends AbstractController
     }
 
     #[Route('/game/{id}/{round}', name: 'app_game', defaults: ['round' => 1])]
-    public function game(Game $game, int $round, CityRepository $cityRepository): Response
+    public function game(Game $game, int $round): Response
     {
         $allCities = $game->getCities()->toArray();
         $totalRounds = $game->getRounds();

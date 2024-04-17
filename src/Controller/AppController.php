@@ -3,13 +3,10 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CityRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Entity\Game;
-use App\Form\GameType;
 use App\Repository\GameRepository;
 use App\Repository\GameScoreRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -62,14 +59,4 @@ class AppController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/game/create', name: 'game_create')]
-    public function create(Request $request): Response
-    {
-        $game = new Game();
-        $form = $this->createForm(GameType::class, $game);
-
-        return $this->render('game/create.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
 }
