@@ -20,17 +20,17 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('email', TextType::class, [
                 'label' => 'Email',
-                'help' => 'We\'ll never share your email with anyone else.',
+                'help' => 'Nous n\'allons pas communiquer avec vous par e-mail.',
             ])
             ->add('username', TextType::class, [
-                'label' => 'Username'
+                'label' => 'Nom d\'utilisateur',
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'J\'accepte les conditions d\'utilisation',
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les conditions d\'utilisation',
                     ]),
                 ],
             ])
