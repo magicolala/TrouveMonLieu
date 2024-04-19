@@ -1,59 +1,69 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .map-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* Ratio 16:9 pour une carte responsive */
-        }
-        
-        .map-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
+	<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+	<style>
+		.map-container {
+			position: relative;
+			width: 100%;
+			padding-bottom: 56.25%; /* Ratio 16:9 pour une carte responsive */
+		}
+
+		.map-image {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	</style>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="my-4">Résultat</h1>
+	<div class="container">
+		<h1 class="my-4">Résultat</h1>
 
-        <div class="alert alert-info">
-            Round {{ round }} sur {{ totalRounds }}
-        </div>
+		<div class="alert alert-info">
+			Round
+			{{ round }}
+			sur
+			{{ totalRounds }}
+		</div>
 
-        {% if score == 0 %}
-            <div class="alert alert-warning">
-                Aucune coordonnée n'a été fournie. Votre score pour ce round est de 0 point.
-            </div>
-        {% else %}
-            <div class="alert alert-info">
-                Votre score pour ce round est de {{ score }} points. La distance entre votre devinette et la position réelle est de {{ distance|round(2) }} kilomètres.
-            </div>
+		{% if score == 0 %}
+			<div class="alert alert-warning">
+				Aucune coordonnée n'a été fournie. Votre score pour ce round est de 0 point.
+			</div>
+		{% else %}
+			<div class="alert alert-info">
+				Votre score pour ce round est de
+				{{ score }}
+				points. La distance entre votre devinette et la position réelle est de
+				{{ distance|round(2) }}
+				kilomètres.
+			</div>
 
-            <div class="map-container mb-4">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?size=2400x1800&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
-            </div>
-        {% endif %}
+			<div class="map-container mb-4">
+				<img src="https://maps.googleapis.com/maps/api/staticmap?size=2400x1800&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
+			</div>
+		{% endif %}
 
-        {% if round < totalRounds %}
-            <a href="{{ path('app_game', {'id': game.id, 'round': round + 1}) }}" class="btn btn-primary mb-4">Round suivant</a>
-        {% else %}
-            <a href="{{ path('app_home') }}" class="btn btn-primary mb-4">Nouvelle partie</a>
-        {% endif %}
+		{% if round < totalRounds %}
+			<a href="{{ path('app_game', {'id': game.id, 'round': round + 1}) }}" class="btn btn-primary mb-4">Round suivant</a>
+		{% else %}
+			<a href="{{ path('app_home') }}" class="btn btn-primary mb-4">Nouvelle partie</a>
+		{% endif %}
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success mb-4">Valider</a>
-        {% endif %}
-        
-        <div class="alert alert-info">
-            Score total : {{ scoreTotal }} points
-        </div>
-    </div>
+		{% if is_granted('ROLE_ADMIN') %}
+			<a href="{{ path('app_validate_city', {'cityId': city.id}) }}" class="btn btn-success mb-4">Valider</a>
+		{% endif %}
+
+		<div class="alert alert-info">
+			Score total :
+			{{ scoreTotal }}
+			points
+		</div>
+	</div>
 {% endblock %}
+

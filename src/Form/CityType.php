@@ -14,6 +14,7 @@ class CityType extends AbstractType
             ->add('name')
             ->add('latitude')
             ->add('longitude')
+            ->add('country')
         ;
     }
 
