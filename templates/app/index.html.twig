@@ -2,7 +2,6 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 {% endblock %}
 
@@ -31,6 +30,9 @@
 							{% if game.bestScore is not null %}
 								<p class="card-text">Meilleur score :
 									{{ game.bestScore }}</p>
+							{% else %}
+								<p class="card-text">Meilleur score :
+									Aucun</p>
 							{% endif %}
 							<a href="{{path('app_game', {id: game.id})}}" class="btn btn-primary">Jouer</a>
 						</div>
