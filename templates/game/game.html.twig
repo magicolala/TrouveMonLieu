@@ -30,7 +30,6 @@
 {% endblock %}
 
 {% block javascripts %}
-	{{parent()}}
 	<script src="https://maps.googleapis.com/maps/api/js?key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
 	<script>
 		var cityData = {
