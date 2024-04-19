@@ -14,8 +14,6 @@
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 100%;
-			object-fit: cover;
 		}
 	</style>
 {% endblock %}
@@ -45,7 +43,7 @@
 			</div>
 
 			<div class="map-container mb-4">
-				<img src="https://maps.googleapis.com/maps/api/staticmap?size=2400x1800&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
+				<img src="https://maps.googleapis.com/maps/api/staticmap?size=800x600&markers=color:red%7Clabel:G%7C{{ guessedLatitude }},{{ guessedLongitude }}&markers=color:green%7Clabel:C%7C{{ city.latitude }},{{ city.longitude }}&key={{ app.request.server.get('GOOGLE_MAPS_API_KEY') }}" alt="Distance map" class="map-image">
 			</div>
 		{% endif %}
 
