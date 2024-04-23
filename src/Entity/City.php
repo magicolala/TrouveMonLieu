@@ -6,6 +6,7 @@ use App\Repository\CityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 class City
@@ -16,18 +17,22 @@ class City
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?float $latitude = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?float $longitude = null;
 
     #[ORM\Column(type: 'boolean')]
     private $validated = false;
 
     #[ORM\Column(length: 3, nullable: true)]
+    #[Assert\Length(max:3)]
     private ?string $country = null;
 
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'cities')]

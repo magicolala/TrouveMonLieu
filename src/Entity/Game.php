@@ -6,6 +6,7 @@ use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 class Game
@@ -20,6 +21,8 @@ class Game
     private ?User $user = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\LessThan(51)]
     private ?int $rounds = null;
 
     #[ORM\ManyToMany(targetEntity: City::class, inversedBy: 'games')]
@@ -35,14 +38,10 @@ class Game
     private ?string $name = null;
 
     private ?int $userScore;
-
-
+    
     #[ORM\Column(nullable: true)]
     private $bestScore = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
     #[ORM\ManyToOne(targetEntity: User::class)]
     private $bestScoreUser;
 

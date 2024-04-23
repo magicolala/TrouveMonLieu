@@ -51,8 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
-    private int $userScore; 
-
     public function __construct()
     {
         $this->games = new ArrayCollection();
